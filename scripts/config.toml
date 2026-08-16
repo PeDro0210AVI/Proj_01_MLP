@@ -1,0 +1,21 @@
+[data]
+csv_path = "data/train.csv"
+target_column = "SalePrice"
+id_column = "Id"
+test_size = 0.2
+seed = 42
+
+[model]
+hidden_layers = [64, 32]
+activation = "relu"
+dropout = 0.1
+
+[training]
+epochs = 200
+batch_size = 32
+learning_rate = 0.001
+weight_decay = 0.0
+early_stopping_patience = 20
+
+[output]
+model_path = "model.pkl"

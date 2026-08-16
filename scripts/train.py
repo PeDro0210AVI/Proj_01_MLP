@@ -32,8 +32,9 @@ class MLP(nn.Module):
         return self.net(x).squeeze(-1)
 
 
-def build_preprocessor(df, target_column):
-    features = df.drop(columns=[target_column])
+def build_preprocessor(df, target_column, id_column=None):
+    drop_cols = [target_column] + ([id_column] if id_column else [])
+    features = df.drop(columns=drop_cols)
     num_cols = features.select_dtypes(include=np.number).columns.tolist()
     cat_cols = features.select_dtypes(exclude=np.number).columns.tolist()
 
@@ -65,9 +66,11 @@ def main(config_path):
 
     df = pd.read_csv(cfg["data"]["csv_path"])
     target_column = cfg["data"]["target_column"]
+    id_column = cfg["data"].get("id_column")
 
-    pre, num_cols, cat_cols = build_preprocessor(df, target_column)
-    X = df.drop(columns=[target_column])
+    pre, num_cols, cat_cols = build_preprocessor(df, target_column, id_column)
+    drop_cols = [target_column] + ([id_column] if id_column else [])
+    X = df.drop(columns=drop_cols)
     y = df[target_column].values.astype(np.float32)
 
     X_train, X_val, y_train, y_val = train_test_split(
@@ -150,6 +153,7 @@ def main(config_path):
         "preprocessor": pre,
         "feature_columns": num_cols + cat_cols,
         "target_column": target_column,
+        "id_column": id_column,
     }
 
     with open(cfg["output"]["model_path"], "wb") as f:
