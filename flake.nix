@@ -56,13 +56,13 @@
           pythonEnv,
         }:
         {
-          default =
-            pkgs.mkShell {
-              packages = [
-                pythonEnv
-                pkgs.texliveFull
-              ];
-            };
+          default = pkgs.mkShell {
+            packages = [
+              pythonEnv
+              pkgs.texliveFull
+              pkgs.pyright
+            ];
+          };
         }
       );
     };
